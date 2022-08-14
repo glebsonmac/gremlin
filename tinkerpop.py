@@ -40,13 +40,30 @@ async def db_connection():
     return vertices
 
 # person = g.addV('Author').property('id', '01').property('name', 'Ravi Raja').iterate();
-# v1 = g.addV('Author').property('id', id).property('name', 'Ravi Raja').next()
+# v1 = g.addV('Author').property('id', id).property('name', 'Ravi Raja').id().next()
 # print(g.addV('Author').property('id', '01').property('name', 'Ravi Raja'))
 # v2 = g.addV('Book').property('id', id).property('name', 'Ravi Raja').property('isbn','false').property('quantity',2).next()
 # print(g.addV('Book').property('id', '01').property('name', 'Ravi Raja').property('isbn','false').property('quantity',2).next())
 # g.addE("created").from_(v1).to(v2).property(id, 1)
 # print(g.V('Author').values('name'))
 
+async def add_author(name,id):
+    remote_connection = await DriverRemoteConnection.open('ws://172.17.0.2:8182/gremlin', 'g')
+    g = Graph().traversal().withRemote(remote_connection)
+    print('connection established')
+    vertices = await g.addV('Author').property('id',id).property('name', name).next()
+    await remote_connection.close()
+    return vertices
 
-print(json.dumps(asyncio.run(db_connection())))
+async def remove_author(id):
+    remote_connection = await DriverRemoteConnection.open('ws://172.17.0.2:8182/gremlin', 'g')
+    g = Graph().traversal().withRemote(remote_connection)
+    print('connection established')
+    vertices = await g.V('Author').has('id',id).drop().next()
+    await remote_connection.close()
+    return vertices
+
+# print(asyncio.run(add_author('vitor',id)))
+print(asyncio.run(remove_author('1')))
+# print(asyncio.run(db_connection()))
 # conn.close()

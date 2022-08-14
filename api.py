@@ -2,8 +2,8 @@
 from http.client import responses
 import asyncio
 import json
-from schemas import Author, Book
-from func import db_connection, add_author
+from schemas import Author, Book, removeAuthor
+from func import db_connection, add_author, remove_author, add_book
 from fastapi import Body, FastAPI, HTTPException, Depends , Query, Request
 from fastapi.responses import JSONResponse
 from gremlin_python import statics
@@ -57,4 +57,24 @@ async def create_author(author:Author):
         print(e)
         return {"message": "API ERROR", "message": e}
 
-# asyncio.run(get_names())
+@app.delete("/remove_authors", tags=["Author"])
+async def remove_author(author:removeAuthor):
+    try:
+        response = await remove_author(author.id)
+        print(response)
+        return  True
+    except Exception as e:
+        print(e)
+        return {"message": "API ERROR", "message": e}
+
+
+@app.post("/add_book", tags=["Book"])
+async def create_book(book:Book):
+    try:
+        book.id = id
+        response = await add_book(book.id, book.name, book.isbn,book.quantity)
+        print(response)
+        return  True
+    except Exception as e:
+        print(e)
+        return {"message": "API ERROR", "message": e}
