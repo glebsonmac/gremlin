@@ -3,7 +3,7 @@ from http.client import responses
 import asyncio
 import json
 from schemas import Author, Book, removeAuthor
-from func import db_connection, add_author, remove_author, add_book
+from func import get_authors, add_author, remove_author, add_book, get_books
 from fastapi import Body, FastAPI, HTTPException, Depends , Query, Request
 from fastapi.responses import JSONResponse
 from gremlin_python import statics
@@ -30,7 +30,7 @@ from gremlin_python.process.traversal import Direction
 # to = Direction.IN
 id = T.id
 app = FastAPI()
-# # g = db_connection()
+# # g = get_authors()
 # # @app.get("/" ,tags=["root"])
 # async def root():
 #     return {"message": "API ALIVE"}
@@ -38,7 +38,7 @@ app = FastAPI()
 @app.get("/get_authors", tags=["Author"])
 async def get_names():
     try:
-        response = await db_connection()
+        response = await get_authors()
         print(response)
         return  response
     except Exception as e:
@@ -75,6 +75,18 @@ async def create_book(book:Book):
         response = await add_book(book.id, book.name, book.isbn,book.quantity)
         print(response)
         return  True
+    except Exception as e:
+        print(e)
+        return {"message": "API ERROR", "message": e}
+
+
+
+@app.get("/get_books", tags=["Book"])
+async def get_names():
+    try:
+        response = await get_books()
+        print(response)
+        return  response
     except Exception as e:
         print(e)
         return {"message": "API ERROR", "message": e}
