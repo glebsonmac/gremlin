@@ -19,3 +19,6 @@ O que vamos avaliar:
 - Validações
 - Arquitetura
 - Interface com o banco de grafo
+
+
+ sudo docker run -it tinkerpop/gremlin-server   

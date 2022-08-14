@@ -1,7 +1,9 @@
 # from tkinter import E
 from http.client import responses
 import asyncio
-from func import db_connection
+import json
+from schemas import Author, Book
+from func import db_connection, add_author
 from fastapi import Body, FastAPI, HTTPException, Depends , Query, Request
 from fastapi.responses import JSONResponse
 from gremlin_python import statics
@@ -26,19 +28,31 @@ from gremlin_python.process.traversal import Direction
 
 # from_ = Direction.OUT
 # to = Direction.IN
-# id = T.id
+id = T.id
 app = FastAPI()
 # # g = db_connection()
 # # @app.get("/" ,tags=["root"])
 # async def root():
 #     return {"message": "API ALIVE"}
 
-@app.get("/get_authors_names", tags=["Author"])
+@app.get("/get_authors", tags=["Author"])
 async def get_names():
     try:
         response = await db_connection()
         print(response)
-        return  response 
+        return  response
+    except Exception as e:
+        print(e)
+        return {"message": "API ERROR", "message": e}
+
+
+@app.post("/add_authors", tags=["Author"])
+async def create_author(author:Author):
+    try:
+        author.id = id
+        response = await add_author(author.name, author.id)
+        print(response)
+        return  True
     except Exception as e:
         print(e)
         return {"message": "API ERROR", "message": e}

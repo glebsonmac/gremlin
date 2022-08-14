@@ -19,6 +19,7 @@ from gremlin_python.process.traversal import WithOptions
 from goblin import DriverRemoteConnection
 from goblin import Graph
 import asyncio
+import json
 from_ = Direction.OUT
 to = Direction.IN
 # conn = DriverRemoteConnection('ws://172.17.0.2:8182/gremlin', 'g')
@@ -47,5 +48,5 @@ async def db_connection():
 # print(g.V('Author').values('name'))
 
 
-print(asyncio.run(db_connection()))
+print(json.dumps(asyncio.run(db_connection())))
 # conn.close()
