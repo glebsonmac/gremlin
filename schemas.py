@@ -25,6 +25,14 @@ class Author(BaseModel):
                 'name': "name",
                 }}
 
+class AuthorName(BaseModel):
+    name: str
+    class Config:
+        schema_extra = {
+            "example": {
+                'name': "name",
+                }}
+
 class removeAuthor(BaseModel):
     id: int
     class Config:

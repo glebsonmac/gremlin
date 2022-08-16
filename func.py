@@ -12,6 +12,14 @@ async def get_authors():
     await remote_connection.close()
     return vertices
 
+async def get_author_by_name(name):
+    remote_connection = await DriverRemoteConnection.open('ws://172.17.0.2:8182/gremlin', 'g')
+    g = Graph().traversal().withRemote(remote_connection)
+    print('connection established')
+    vertices = await g.V().hasLabel('Author').properties('name',name).toList()
+    await remote_connection.close()
+    return vertices
+
 async def add_author(name,id):
     remote_connection = await DriverRemoteConnection.open('ws://172.17.0.2:8182/gremlin', 'g')
     g = Graph().traversal().withRemote(remote_connection)
@@ -20,7 +28,7 @@ async def add_author(name,id):
     await remote_connection.close()
     return vertices
 
-async def remove_author(id):
+async def delete_author(id):
     remote_connection = await DriverRemoteConnection.open('ws://172.17.0.2:8182/gremlin', 'g')
     g = Graph().traversal().withRemote(remote_connection)
     print('connection established')
@@ -44,3 +52,9 @@ async def get_books():
     vertices = await g.V().hasLabel('Book').properties('name').toList()
     await remote_connection.close()
     return vertices
+
+
+async def update_authors():
+    return True
+async def update_books():
+    return True
