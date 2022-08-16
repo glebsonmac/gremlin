@@ -3,8 +3,9 @@ from http.client import responses
 import asyncio
 import json
 from schemas import Author, Book, removeAuthor, AuthorName
-from func import get_authors, add_author, delete_author, add_books, get_books, get_author_by_name, update_author, update_books, delete_books
+from func import get_authors, add_author, delete_author, add_books, get_books, get_author_by_name, update_author, update_books, delete_books, verifyName
 from fastapi import Body, FastAPI, HTTPException, Depends , Query, Request
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 from gremlin_python import statics
 from gremlin_python.process.anonymous_traversal import traversal
@@ -49,9 +50,12 @@ async def get_all_authors():
 @app.post("/get_authors_by_name", tags=["Author"])
 async def get_authors_by_name(author:AuthorName):
     try:
-        response = await get_author_by_name(author.name)
-        print(response)
-        return  response
+        if verifyName(author.name):
+            response = await get_author_by_name(author.name)
+            print(response)
+            return  response
+        else:
+            raise HTTPException(status_code=404, detail='please put the author name with the correct format')
     except Exception as e:
         print(e)
         return {"message": "API ERROR", "message": e}

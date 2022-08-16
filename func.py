@@ -3,7 +3,14 @@ from gremlin_python.process.anonymous_traversal import traversal
 from goblin import DriverRemoteConnection
 from goblin import Graph
 import asyncio
+import re
 
+
+async def verifyName(string):
+    if re.findall('[A-Za-z]{2,25}\s[A-Za-z]{2,25}', string):
+        return True
+    else:
+        return False
 async def get_authors():
     remote_connection = await DriverRemoteConnection.open('ws://172.17.0.2:8182/gremlin', 'g')
     g = Graph().traversal().withRemote(remote_connection)
@@ -37,7 +44,7 @@ async def delete_author(id):
     return vertices
 
 
-async def add_book( id, name, isbn ,quantity):
+async def add_books( id, name, isbn ,quantity):
     remote_connection = await DriverRemoteConnection.open('ws://172.17.0.2:8182/gremlin', 'g')
     g = Graph().traversal().withRemote(remote_connection)
     print('connection established') 
@@ -57,4 +64,7 @@ async def get_books():
 async def update_authors():
     return True
 async def update_books():
+    return True
+
+async def delete_books():
     return True
